@@ -83,6 +83,7 @@ class Regression(GibbsSampling, MeanField, MaxLikelihood):
     ### converting between natural and standard parameters
 
     @staticmethod
+    @jit(nopython=False)
     def _standard_to_natural(nu,S,M,K):
         Kinv = inv_psd(K)
         A = S + M.dot(Kinv).dot(M.T)
@@ -92,7 +93,7 @@ class Regression(GibbsSampling, MeanField, MaxLikelihood):
         return np.array([A,B,C,d])
 
     @staticmethod
-    @jit(nopython=True)
+    @jit(nopython=False)
     def _natural_to_standard(natparam):
         A,B,C,d = natparam   # natparam is roughly (yyT, yxT, xxT, n)
         nu = d
