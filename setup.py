@@ -63,7 +63,7 @@ setup(name='pybasicbayes',
       keywords=[
           'bayesian', 'inference', 'mcmc', 'variational inference',
           'mean field', 'vb'],
-      install_requires=["numpy", "scipy", "matplotlib", "nose", "future"],
+      install_requires=["numpy", "scipy", "matplotlib", "nose", "future", "numba"],
       setup_requires=['numpy'],
       classifiers=[
           'Intended Audience :: Science/Research',
