@@ -293,6 +293,7 @@ def solve_psd(A,b,chol=None,lower=True,overwrite_b=False,overwrite_A=False):
     else:
         return lapack.dpotrs(chol,b,lower,overwrite_b)[0]
 
+@jit(nopython=True)
 def copy_lower_to_upper(A):
     A += np.tril(A,k=-1).T
 
