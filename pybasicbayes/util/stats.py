@@ -267,7 +267,7 @@ def sample_mn(M, U=None, Uinv=None, V=None, Vinv=None):
 
     if U is not None:
         # G = np.dot(np.linalg.cholesky(U),G)
-        G = sample_GU
+        G = sample_GU(U, G)
     else:
         G = np.linalg.solve(np.linalg.cholesky(Uinv).T,G)
 
