@@ -277,7 +277,7 @@ def ndarrayhash(v):
 ### numerical linear algebra
 
 def inv_psd(A, return_chol=False):
-    L = np.linalg.cholesky(A)
+    L = get_cholesky(A)
     Ainv = lapack.dpotri(L, lower=True)[0]
     copy_lower_to_upper(Ainv)
     # if not np.allclose(Ainv, np.linalg.inv(A), rtol=1e-5, atol=1e-5):
@@ -301,6 +301,11 @@ def copy_lower_to_upper(A):
 @jit(nopython=True)
 def check_eig(S):
     assert np.all(0 < np.linalg.eigvalsh(S))
+
+@jit(nopython=True)
+def get_cholesky(A):
+    return np.linalg.cholesky(A)
+
 
 
 # NOTE: existing numpy object array construction acts a bit weird, e.g.
