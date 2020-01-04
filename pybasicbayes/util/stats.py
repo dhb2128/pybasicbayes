@@ -245,12 +245,21 @@ def sample_wishart(sigma, nu):
 
     return np.dot(X,X.T)
 
+# https://github.com/numba/numba/issues/1596#issuecomment-167808732
+@jit(nopython=True)
+def standard_normal(size):
+    r = np.empty(size, dtype=np.float64)
+    for i in range(size):
+        r[i] = np.random.standard_normal()
+    return r
+
+
 @jit(nopython=True)
 def sample_mn(M, U=None, Uinv=None, V=None, Vinv=None):
     assert (U is None) ^ (Uinv is None)
     assert (V is None) ^ (Vinv is None)
 
-    G = np.random.normal(size=M.shape)
+    G = standard_normal(size=M.shape)
 
     if U is not None:
         G = np.dot(np.linalg.cholesky(U),G)
