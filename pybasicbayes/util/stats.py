@@ -253,10 +253,21 @@ def standard_normal(size):
         r[i] = np.random.standard_normal()
     return r
 
-
 @jit(nopython=True)
 def sample_GU(U, G):
     return np.dot(np.linalg.cholesky(U),G)
+
+@jit(nopython=True)
+def sample_GUinv(Uinv, G):
+    return np.linalg.solve(np.linalg.cholesky(Uinv).T,G)
+
+@jit(nopython=True)
+def sample_GV(V, G):
+    return np.dot(G,np.linalg.cholesky(V).T)
+
+@jit(nopython=True)
+def sample_GVinv(Vinv, G):
+    return np.linalg.solve(np.linalg.cholesky(Vinv).T,G.T).T
 
 
 def sample_mn(M, U=None, Uinv=None, V=None, Vinv=None):
@@ -269,12 +280,13 @@ def sample_mn(M, U=None, Uinv=None, V=None, Vinv=None):
         # G = np.dot(np.linalg.cholesky(U),G)
         G = sample_GU(U, G)
     else:
-        G = np.linalg.solve(np.linalg.cholesky(Uinv).T,G)
+        # G = np.linalg.solve(np.linalg.cholesky(Uinv).T,G)
+        G = sample_GUinv(Uinv, G)
 
     if V is not None:
-        G = np.dot(G,np.linalg.cholesky(V).T)
+        G = sample_GV(V, G)
     else:
-        G = np.linalg.solve(np.linalg.cholesky(Vinv).T,G.T).T
+        G = sample_GVinv(Vinv, G)
 
     return M + G
 
