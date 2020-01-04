@@ -20,7 +20,7 @@ from pybasicbayes.util.stats import sample_gaussian, sample_mniw, \
     sample_invgamma, update_param
 
 from pybasicbayes.util.general import blockarray, inv_psd, cumsum, \
-    all_none, any_none, AR_striding, objarray
+    all_none, any_none, AR_striding, objarray, check_eig
 
 from numba import jit
 
@@ -108,8 +108,10 @@ class Regression(GibbsSampling, MeanField, MaxLikelihood):
         # numerical padding here...
         K += 1e-8*np.eye(K.shape[0])
         S += 1e-8*np.eye(S.shape[0])
-        assert np.all(0 < np.linalg.eigvalsh(S))
-        assert np.all(0 < np.linalg.eigvalsh(K))
+        check_eig(S)
+        check_eig(K)
+        # assert np.all(0 < np.linalg.eigvalsh(S))
+        # assert np.all(0 < np.linalg.eigvalsh(K))
 
         # standard is degrees of freedom, mean of sigma (ish), mean of A, cov of rows of A
         return nu, S, M, K

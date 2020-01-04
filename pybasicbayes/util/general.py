@@ -14,7 +14,7 @@ from contextlib import closing
 from itertools import chain, count
 from functools import reduce
 from urllib.request import urlopen  # py2.7 covered by standard_library.install_aliases()
-
+from numba import jit
 
 def blockarray(*args,**kwargs):
     return np.array(np.bmat(*args,**kwargs),copy=False)
@@ -295,6 +295,11 @@ def solve_psd(A,b,chol=None,lower=True,overwrite_b=False,overwrite_A=False):
 
 def copy_lower_to_upper(A):
     A += np.tril(A,k=-1).T
+
+
+@jit(nopython=True)
+def check_eig(S):
+    assert np.all(0 < np.linalg.eigvalsh(S))
 
 
 # NOTE: existing numpy object array construction acts a bit weird, e.g.
