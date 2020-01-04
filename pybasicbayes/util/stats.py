@@ -255,6 +255,10 @@ def standard_normal(size):
 
 
 @jit(nopython=True)
+def sample_GU(U, G):
+    return np.dot(np.linalg.cholesky(U),G)
+
+
 def sample_mn(M, U=None, Uinv=None, V=None, Vinv=None):
     assert (U is None) ^ (Uinv is None)
     assert (V is None) ^ (Vinv is None)
@@ -262,7 +266,8 @@ def sample_mn(M, U=None, Uinv=None, V=None, Vinv=None):
     G = standard_normal(size=M.shape)
 
     if U is not None:
-        G = np.dot(np.linalg.cholesky(U),G)
+        # G = np.dot(np.linalg.cholesky(U),G)
+        G = sample_GU
     else:
         G = np.linalg.solve(np.linalg.cholesky(Uinv).T,G)
 
