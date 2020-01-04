@@ -249,7 +249,7 @@ def sample_wishart(sigma, nu):
 @jit(nopython=True)
 def standard_normal(size):
     r = np.empty(size, dtype=np.float64)
-    for i in range(size):
+    for i in np.ndindex(size):
         r[i] = np.random.standard_normal()
     return r
 
