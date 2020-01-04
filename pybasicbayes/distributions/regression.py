@@ -22,6 +22,7 @@ from pybasicbayes.util.stats import sample_gaussian, sample_mniw, \
 from pybasicbayes.util.general import blockarray, inv_psd, cumsum, \
     all_none, any_none, AR_striding, objarray
 
+from numba import jit
 
 class Regression(GibbsSampling, MeanField, MaxLikelihood):
     def __init__(
@@ -91,6 +92,7 @@ class Regression(GibbsSampling, MeanField, MaxLikelihood):
         return np.array([A,B,C,d])
 
     @staticmethod
+    @jit(nopython=True)
     def _natural_to_standard(natparam):
         A,B,C,d = natparam   # natparam is roughly (yyT, yxT, xxT, n)
         nu = d

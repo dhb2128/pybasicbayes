@@ -12,6 +12,7 @@ from numpy.core.umath_tests import inner1d
 
 from .general import any_none, blockarray
 
+from numba import jit
 ### data abstraction
 
 # the data type is ndarrays OR lists of ndarrays
@@ -244,6 +245,7 @@ def sample_wishart(sigma, nu):
 
     return np.dot(X,X.T)
 
+@jit(nopython=True)
 def sample_mn(M, U=None, Uinv=None, V=None, Vinv=None):
     assert (U is None) ^ (Uinv is None)
     assert (V is None) ^ (Vinv is None)
